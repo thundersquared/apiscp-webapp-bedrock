@@ -34,7 +34,12 @@ class Bedrock extends Wordpress_Handler
 		return true;
 	}
 
-	public function getAppRoot($hostname, $path = ''): ?string
+	public function getAppRoot(): ?string
+	{
+		return $this->getAppRootReal($this->getHostname(), $this->getPath());
+	}
+
+	public function getAppRootByParams($hostname, $path = ''): ?string
 	{
 		if (is_null($hostname))
 		{
@@ -63,8 +68,8 @@ class Bedrock extends Wordpress_Handler
 
 	public function detect($hostname, $path = ''): bool
 	{
-		return file_exists($this->getAppRoot($hostname, $path) . '/config/application.php') &&
-			is_dir($this->getAppRoot($hostname, $path) . '/config/environments') &&
-			is_dir($this->getAppRoot($hostname, $path) . '/web/app/plugins');
+		return file_exists($this->getAppRootByParams($hostname, $path) . '/config/application.php') &&
+			is_dir($this->getAppRootByParams($hostname, $path) . '/config/environments') &&
+			is_dir($this->getAppRootByParams($hostname, $path) . '/web/app/plugins');
 	}
 }
