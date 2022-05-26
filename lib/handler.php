@@ -23,6 +23,12 @@ class Bedrock extends Wordpress_Handler
 	const FEAT_ALLOW_SSL = true;
 	const FEAT_RECOVERY = false;
 
+	public function getClassMapping(): string
+	{
+		// class ref is "bedrock"
+		return 'bedrock';
+	}
+
 	public function display(): bool
 	{
 		return true;
