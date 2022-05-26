@@ -34,11 +34,6 @@ class Bedrock extends Wordpress_Handler
 		return true;
 	}
 
-	public function getAppRoot(): ?string
-	{
-		return $this->getAppRootReal($this->getHostname(), $this->getPath());
-	}
-
 	public function getAppRoot($hostname, $path = ''): ?string
 	{
 		if (is_null($hostname))
