@@ -34,7 +34,7 @@ class Bedrock_Module extends \Wordpress_Module
 		{
 			if (!($path = realpath($this->domain_fs_path($hostname))))
 			{
-				return false;
+				return null;
 			}
 			$approot = \dirname($path);
 		}
@@ -43,7 +43,7 @@ class Bedrock_Module extends \Wordpress_Module
 			$approot = $this->getAppRoot($hostname, $path);
 			if (!$approot)
 			{
-				return false;
+				return null;
 			}
 			$approot = $this->domain_fs_path($approot);
 		}
@@ -103,14 +103,9 @@ class Bedrock_Module extends \Wordpress_Module
 			return null;
 		}
 
-		// Create instance with no adapters beside array,
+		// Create instance with no adapters besides ArrayAdapter,
 		// we just need to peek at it without loading it actually
-		$repository = Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
-			->addAdapter(Dotenv\Repository\Adapter\ArrayAdapter::class)
-			->immutable()
-			->make();
-
-		$dotenv = Dotenv\Dotenv::create($repository, $approot);
+		$dotenv = Dotenv::create($approot, null, new DotenvFactory([new ArrayAdapter()]));
 		$variables = $dotenv->load();
 
 		// Reeturn current WP_ENV value
@@ -134,7 +129,8 @@ class Bedrock_Module extends \Wordpress_Module
 		$environments = $this->file_get_directory_contents($approot . '/config/environments/');
 
 		// Collect and clean output checking whether environment matches active one
-		return collect($environments)->map(function ($environment) use ($active_environment) {
+		return collect($environments)->map(function ($environment) use ($active_environment)
+		{
 			$name = basename($environment['file_name']);
 
 			return [
