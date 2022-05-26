@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace sqrd\ApisCP\Webapps;
 
 use Module\Support\Webapps\Traits\PublicRelocatable;
+use Dotenv\Environment\Adapter\ArrayAdapter;
+use Dotenv\Environment\DotenvFactory;
+use Dotenv\Dotenv;
 
 class Bedrock_Module extends \Wordpress_Module
 {
@@ -88,6 +91,57 @@ class Bedrock_Module extends \Wordpress_Module
 		}
 
 		return self::read_json($approot . '/composer.json', 'require.roots/wordpress');
+	}
+
+	public function get_environment(string $hostname, string $path = ''): ?string
+	{
+		$approot = $this->getAppRootPath($hostname, $path);
+
+		// is .env file missing?
+		if (!file_exists($approot . '/.env'))
+		{
+			return null;
+		}
+
+		// Create instance with no adapters beside array,
+		// we just need to peek at it without loading it actually
+		$repository = Dotenv\Repository\RepositoryBuilder::createWithNoAdapters()
+			->addAdapter(Dotenv\Repository\Adapter\ArrayAdapter::class)
+			->immutable()
+			->make();
+
+		$dotenv = Dotenv\Dotenv::create($repository, $approot);
+		$variables = $dotenv->load();
+
+		// Reeturn current WP_ENV value
+		return $variables['WP_ENV'];
+	}
+
+	public function get_environments(string $hostname, string $path = ''): ?string
+	{
+		$approot = $this->getAppRootPath($hostname, $path);
+
+		// is config/environments/ dir missing?
+		if (!is_dir($approot . '/config/environments/'))
+		{
+			return null;
+		}
+
+		// Get current active environment
+		$active_environment = $this->get_environment($hostname, $path);
+
+		// Scan config/environments/ to extract available environments
+		$environments = $this->file_get_directory_contents($approot . '/config/environments/');
+
+		// Collect and clean output checking whether environment matches active one
+		return collect($environments)->map(function ($environment) use ($active_environment) {
+			$name = basename($environment['file_name']);
+
+			return [
+				'name' => $name,
+				'status' => $name === $active_environment,
+			];
+		});
 	}
 
 	static public function read_json(string $path, $property = null)
