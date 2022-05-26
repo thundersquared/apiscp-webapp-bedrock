@@ -39,7 +39,7 @@ class Bedrock_Module extends \Wordpress_Module
 	}
 
 	/**
-	 * Location is a valid Laravel install
+	 * Location is a valid Bedrock install
 	 *
 	 * @param string $hostname or $docroot
 	 * @param string $path
