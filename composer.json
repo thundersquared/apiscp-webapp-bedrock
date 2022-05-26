@@ -14,11 +14,17 @@
             "email": "an@thundersquared.com"
         }
     ],
+    "autoload": {
+        "classmap": [
+            "lib/"
+        ],
+        "exclude-from-classmap": []
+    },
     "config": {
         "preferred-install": "dist",
         "prepend-autoloader": false
     },
-    "type": "prestashop-module",
+    "type": "apiscp-webapp",
     "require": {
         "adbario/php-dot-notation": "^3.1"
     }
