@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace sqrd\ApisCP\Webapps;
 
-require_once 'vendor/autoload.php';
-
 use Module\Support\Webapps\Traits\PublicRelocatable;
 
 class Bedrock_Module extends \Wordpress_Module
@@ -69,7 +67,7 @@ class Bedrock_Module extends \Wordpress_Module
 	 */
 	public function valid(string $hostname, string $path = ''): bool
 	{
-		$approot = getAppRootPath($hostname, $path);
+		$approot = $this->getAppRootPath($hostname, $path);
 
 		return false !== $approot &&
 			file_exists($approot . '/config/application.php') &&
