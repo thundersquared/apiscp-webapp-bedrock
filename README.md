@@ -25,5 +25,15 @@ systemctl restart apiscp
 
 Voila!
 
+## Updating
+
+```
+cd /usr/local/apnscp/config/custom/webapps/bedrock
+git pull
+cd /usr/local/apnscp
+./composer dump-autoload -o
+systemctl restart apiscp
+```
+
 ## Learning more
 All third-party documentation is available via [docs.apiscp.com](https://docs.apiscp.com/admin/webapps/Custom/).
