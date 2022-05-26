@@ -112,12 +112,15 @@ class Bedrock_Module extends \Wordpress_Module
 		return $variables['WP_ENV'];
 	}
 
-	public function get_environments(string $hostname, string $path = ''): ?string
+	public function get_environments(string $hostname, string $path = ''): ?array
 	{
-		$approot = $this->getAppRootPath($hostname, $path);
+		// App root is needed to use internal calls
+		$approot = $this->getAppRoot($hostname, $path);
+		// App root path is needed for PHP direct checks
+		$approotpath = $this->getAppRootPath($hostname, $path);
 
 		// is config/environments/ dir missing?
-		if (!is_dir($approot . '/config/environments/'))
+		if (!is_dir($approotpath . '/config/environments/'))
 		{
 			return null;
 		}
@@ -129,15 +132,15 @@ class Bedrock_Module extends \Wordpress_Module
 		$environments = $this->file_get_directory_contents($approot . '/config/environments/');
 
 		// Collect and clean output checking whether environment matches active one
-		return collect($environments)->map(function ($environment) use ($active_environment)
+		return array_map(function ($environment) use ($active_environment)
 		{
-			$name = basename($environment['file_name']);
+			$name = pathinfo($environment['filename'], PATHINFO_FILENAME);
 
 			return [
 				'name' => $name,
 				'status' => $name === $active_environment,
 			];
-		});
+		}, $environments);
 	}
 
 	static public function read_json(string $path, $property = null)
