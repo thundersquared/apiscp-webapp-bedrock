@@ -6,7 +6,12 @@ This is a Bedrock WordPress application for [ApisCP](https://apiscp.com).
 
 ```bash
 cd /usr/local/apnscp
-git clone https://github.com/thundersquared/apiscp-webapp-bedrock config/custom/webapps/bedrock
+sudo -u apnscp mkdir -p config/custom/webapps
+sudo -u apnscp git clone https://github.com/thundersquared/apiscp-webapp-bedrock config/custom/webapps/bedrock
+cd config/custom/webapps/bedrock
+sudo -u apnscp composer install
+sudo -u apnscp composer dump-autoload -o --no-dev
+cd /usr/local/apnscp
 ./composer dump-autoload -o
 ```
 Edit config/custom/boot.php, create if not exists:
@@ -29,10 +34,11 @@ Voila!
 
 ```
 cd /usr/local/apnscp/config/custom/webapps/bedrock
-git pull
+sudo -u apnscp git pull
+sudo -u apnscp composer update
+sudo -u apnscp composer dump-autoload -o --no-dev
 cd /usr/local/apnscp
-./composer dump-autoload -o
-systemctl restart apiscp
+./composer dump-autoload -o && systemctl restart apiscp
 ```
 
 ## Learning more

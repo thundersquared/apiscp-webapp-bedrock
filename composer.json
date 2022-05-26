@@ -14,6 +14,11 @@
             "email": "an@thundersquared.com"
         }
     ],
+    "config": {
+        "preferred-install": "dist",
+        "prepend-autoloader": false
+    },
+    "type": "prestashop-module",
     "require": {
         "adbario/php-dot-notation": "^3.1"
     }
