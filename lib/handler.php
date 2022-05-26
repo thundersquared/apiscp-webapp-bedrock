@@ -49,4 +49,14 @@ class Bedrock extends Wordpress_Handler
 	{
 		return $this->getVersions();
 	}
+
+	public function handle(array $params): bool
+	{
+		if (!empty($params['say']))
+		{
+			return $this->{$this->getClassMapping() . '_hello'}();
+		}
+
+		return parent::handle($params);
+	}
 }

@@ -1,0 +1,20 @@
+{
+    "name": "thundersquared/apiscp-webapp-bedrock",
+    "description": "A Bedrock WordPress application for ApisCP",
+    "keywords": [
+        "apiscp",
+        "bedrock",
+        "wordpress"
+    ],
+    "homepage": "https://github.com/thundersquared/apiscp-webapp-bedrock",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anatoli Nicolae",
+            "email": "an@thundersquared.com"
+        }
+    ],
+    "require": {
+        "adbario/php-dot-notation": "^3.1"
+    }
+}
