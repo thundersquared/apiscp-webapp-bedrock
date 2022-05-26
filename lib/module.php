@@ -13,7 +13,6 @@ class Bedrock_Module extends \Wordpress_Module
 		getAppRoot as getAppRootReal;
 	}
 
-
 	const APP_NAME = 'Bedrock WordPress';
 
 	protected function getAppRoot(string $hostname, string $path = ''): ?string
