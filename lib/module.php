@@ -44,6 +44,8 @@ class Bedrock_Module extends \Wordpress_Module
 			}
 			$approot = $this->domain_fs_path($approot);
 		}
+
+		return $approot;
 	}
 
 	/**
