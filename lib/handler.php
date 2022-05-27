@@ -26,7 +26,7 @@ class Bedrock_Handler extends Wordpress_Handler
 	public function getClassMapping(): string
 	{
 		// class ref is "bedrock"
-		return 'bedrock-wordpress';
+		return 'bedrock';
 	}
 
 	public function getAppFamily(): ?string
