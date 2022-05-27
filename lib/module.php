@@ -113,7 +113,7 @@ class Bedrock_Module extends \Wordpress_Module
 		return $variables['WP_ENV'];
 	}
 
-	public function set_environment(string $hostname, string $path = '', string $environment): ?bool
+	public function set_environment(string $hostname, string $path = '', string $environment): ?string
 	{
 		$approot = $this->getAppRootPath($hostname, $path);
 
@@ -129,7 +129,7 @@ class Bedrock_Module extends \Wordpress_Module
 		$editor->set('WP_ENV', $environment);
 		$editor->save();
 
-		return true;
+		return $editor->getEnv('WP_ENV');
 	}
 
 	public function get_environments(string $hostname, string $path = ''): ?array
