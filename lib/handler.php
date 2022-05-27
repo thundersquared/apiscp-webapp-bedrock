@@ -31,7 +31,7 @@ class Bedrock_Handler extends Wordpress_Handler
 
 	public function getAppFamily(): ?string
 	{
-		return 'bedrock-wordpress';
+		return 'bedrock';
 	}
 
 	public function display(): bool
