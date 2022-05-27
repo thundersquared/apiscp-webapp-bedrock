@@ -24,18 +24,12 @@
 		$environments = \cmd('bedrock_get_environments', $app->getHostname(), $app->getPath());
 	@endphp
 	@foreach ($environments as $environment)
-        <tr>
-            <th colspan="5" class="bg-light">
-                <h6 class="mb-0">{{ $asset['type'] }}</h6>
-            </th>
-        </tr>
-        @endif
         <tr class="environment-row">
             <td>
-                {{ $asset['name'] }}
+                {{ $environment['name'] }}
             </td>
             <td>
-                {{ $asset['status'] }}
+                {{ $environment['status'] }}
             </td>
         </tr>
 	@endforeach
