@@ -8,7 +8,7 @@ use Module\Support\Webapps\App\Type\Wordpress\Handler as Wordpress_Handler;
 use Module\Support\Webapps\Traits\PublicRelocatable;
 
 
-class Bedrock extends Wordpress_Handler
+class Bedrock_WordPress_Handler extends Wordpress_Handler
 {
 	use PublicRelocatable
 	{
@@ -26,7 +26,12 @@ class Bedrock extends Wordpress_Handler
 	public function getClassMapping(): string
 	{
 		// class ref is "bedrock"
-		return 'bedrock';
+		return 'bedrock-wordpress';
+	}
+
+	public function getAppFamily(): ?string
+	{
+		return 'bedrock-wordpress';
 	}
 
 	public function display(): bool
