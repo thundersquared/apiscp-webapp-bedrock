@@ -57,10 +57,10 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                const callback = e.data('bedrock-action');
+                const callback = element.data('bedrock-action');
 
                 if (callback in callbacks) {
-                    callbacks[callback](e);
+                    callbacks[callback](element);
                 }
             });
         });
