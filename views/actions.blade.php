@@ -10,6 +10,7 @@
     {{ _('SSO Check') }}
 </div>
 
+<h5>Environments</h5>
 <table class="table table-responsive">
     <thead>
         <th>Name</th>
@@ -26,9 +27,10 @@
                 </td>
                 <td>
                     @if ($environment['status'] === true)
-                        <label class="badge badge-success">Currently Enabled</label>
+                        <button class="btn btn-disabled" disabled>Currently Enabled</button>
                     @else
-                        <button class="btn btn-primary" bedrock-action="enabled-environment">Activate</button>
+                        <button class="btn btn-primary" bedrock-action="enabled-environment"
+                            bedrock-environment="{{ $environment['name'] }}">Currently Enabled</button>
                     @endif
                 </td>
             </tr>
