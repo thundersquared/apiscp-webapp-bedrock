@@ -27,7 +27,7 @@
                 <td>
                     @if ($environment['status'] === true)
                         <label class="badge badge-success">Currently Enabled</label>
-                        @elseif
+                    @else
                         <button class="btn btn-primary" bedrock-action="enabled-environment">Activate</button>
                     @endif
                 </td>
