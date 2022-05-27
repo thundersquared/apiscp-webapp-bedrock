@@ -57,7 +57,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                const callback = element.data('bedrock-action');
+                const callback = element.attr('bedrock-action');
 
                 if (callback in callbacks) {
                     callbacks[callback](element);
