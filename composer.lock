@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7b2545fd1c6d6d9acb38947ab5d4bc88",
+    "content-hash": "461486ae5c36dd4c881850fcffba84fd",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -59,6 +59,59 @@
                 "source": "https://github.com/adbario/php-dot-notation/tree/3.1.1"
             },
             "time": "2022-03-28T01:09:30+00:00"
+        },
+        {
+            "name": "sixlive/dotenv-editor",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sixlive/dotenv-editor.git",
+                "reference": "c13a1a043887a5c61079bb98dfa32e0583f4aa52"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sixlive/dotenv-editor/zipball/c13a1a043887a5c61079bb98dfa32e0583f4aa52",
+                "reference": "c13a1a043887a5c61079bb98dfa32e0583f4aa52",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.2",
+                "larapack/dd": "^1.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "sixlive\\DotenvEditor\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "TJ Miller",
+                    "email": "oss@tjmiller.co",
+                    "homepage": "https://tjmiller.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A tool to edit phpdotenv files",
+            "homepage": "https://github.com/sixlive/dotenv-editor",
+            "keywords": [
+                "dotenv",
+                "dotenv-editor",
+                "phpdotenv"
+            ],
+            "support": {
+                "issues": "https://github.com/sixlive/dotenv-editor/issues",
+                "source": "https://github.com/sixlive/dotenv-editor/tree/v2.0.0"
+            },
+            "time": "2021-11-15T13:52:36+00:00"
         }
     ],
     "packages-dev": [],

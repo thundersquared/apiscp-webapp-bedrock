@@ -44,7 +44,10 @@
     (function() {
         const callbacks = {
             enable_environment: function(e) {
-                console.log(e);
+                const environment = e.getAttribute('bedrock-environment');
+                const fn = 'bedrock_set_environment',
+                    args = [__WA_META.hostname, __WA_META.path, environment];
+                return apnscp.cmd(fn, args);
             }
         };
 

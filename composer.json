@@ -26,6 +26,7 @@
     },
     "type": "apiscp-webapp",
     "require": {
-        "adbario/php-dot-notation": "^3.1"
+        "adbario/php-dot-notation": "^3.1",
+        "sixlive/dotenv-editor": "^2.0"
     }
 }

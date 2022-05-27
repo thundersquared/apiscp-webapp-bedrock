@@ -8,6 +8,7 @@ use Module\Support\Webapps\Traits\PublicRelocatable;
 use Dotenv\Environment\Adapter\ArrayAdapter;
 use Dotenv\Environment\DotenvFactory;
 use Dotenv\Dotenv;
+use sixlive\DotenvEditor\DotenvEditor;
 
 class Bedrock_Module extends \Wordpress_Module
 {
@@ -108,8 +109,27 @@ class Bedrock_Module extends \Wordpress_Module
 		$dotenv = Dotenv::create($approot, null, new DotenvFactory([new ArrayAdapter()]));
 		$variables = $dotenv->load();
 
-		// Reeturn current WP_ENV value
+		// Return current WP_ENV value
 		return $variables['WP_ENV'];
+	}
+
+	public function set_environment(string $hostname, string $path = '', string $environment): ?bool
+	{
+		$approot = $this->getAppRootPath($hostname, $path);
+
+		// is .env file missing?
+		if (!file_exists($approot . '/.env'))
+		{
+			return null;
+		}
+
+		$editor = new DotenvEditor;
+
+		$editor->load($approot . '/.env');
+		$editor->set('WP_ENV', $environment);
+		$editor->save();
+
+		return true;
 	}
 
 	public function get_environments(string $hostname, string $path = ''): ?array
