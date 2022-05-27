@@ -8,7 +8,7 @@ use Module\Support\Webapps\App\Type\Wordpress\Handler as Wordpress_Handler;
 use Module\Support\Webapps\Traits\PublicRelocatable;
 
 
-class Bedrock_WordPress_Handler extends Wordpress_Handler
+class Bedrock_Handler extends Wordpress_Handler
 {
 	use PublicRelocatable
 	{

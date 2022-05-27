@@ -9,7 +9,7 @@ use Dotenv\Environment\Adapter\ArrayAdapter;
 use Dotenv\Environment\DotenvFactory;
 use Dotenv\Dotenv;
 
-class Bedrock_wordpress_Module extends \Wordpress_Module
+class Bedrock_Module extends \Wordpress_Module
 {
 	use PublicRelocatable
 	{
