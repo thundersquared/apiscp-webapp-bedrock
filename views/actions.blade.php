@@ -41,7 +41,7 @@
 </div>
 
 <script type="text/javascript">
-    (function($) {
+    (function() {
         const callbacks = {
             enable_environment: function(e) {
                 console.log(e);
@@ -53,16 +53,17 @@
 
         // Bind callback bv action
         actionables.forEach(function(element) {
-            $(element).click(function(e) {
+            element.onclick = function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
-                const callback = element.attr('bedrock-action');
+                // Get callback from attribute
+                const callback = element.getAttribute('bedrock-action');
 
                 if (callback in callbacks) {
                     callbacks[callback](element);
                 }
-            });
+            }
         });
-    })(jQuery);
+    })();
 </script>
