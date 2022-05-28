@@ -15,10 +15,9 @@
         }
     ],
     "autoload": {
-        "classmap": [
-            "lib/"
-        ],
-        "exclude-from-classmap": []
+        "psr-0": {
+            "sqrd\\ApisCP\\Webapps\\Bedrock\\": "src/"
+        }
     },
     "config": {
         "preferred-install": "dist",
@@ -30,6 +29,6 @@
         "sixlive/dotenv-editor": "^2.0"
     },
     "scripts": {
-        "post-update-cmd": "sqrd\\ApisCP\\Webapps\\Bedrock\\ComposerHooks::postUpdate"
+        "post-update-cmd": "sqrd\\ApisCP\\Webapps\\Bedrock\\Helpers\\Composer\\Hooks::postUpdate"
     }
 }

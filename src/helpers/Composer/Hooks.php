@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace sqrd\ApisCP\Webapps\Bedrock;
+namespace sqrd\ApisCP\Webapps\Bedrock\Helpers\Composer;
 
-class ComposerHooks
+class Hooks
 {
     // Post install/update hook
     static public function postUpdate(): void
