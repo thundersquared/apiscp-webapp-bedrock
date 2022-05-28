@@ -29,6 +29,9 @@
         "sixlive/dotenv-editor": "^2.0"
     },
     "scripts": {
-        "post-update-cmd": "sqrd\\ApisCP\\Webapps\\Bedrock\\Helpers\\Composer\\Hooks::postUpdate"
+        "post-update-cmd": [
+            "@sqrd-cleanup-composer"
+        ],
+        "sqrd-cleanup-composer": "rm -f vendor/composer/InstalledVersions.php"
     }
 }
