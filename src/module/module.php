@@ -9,6 +9,7 @@ use Dotenv\Environment\Adapter\ArrayAdapter;
 use Dotenv\Environment\DotenvFactory;
 use Dotenv\Dotenv;
 use sixlive\DotenvEditor\DotenvEditor;
+use sqrd\ApisCP\Webapps\Bedrock\Helpers\File;
 
 class Bedrock_Module extends \Wordpress_Module
 {
@@ -91,7 +92,7 @@ class Bedrock_Module extends \Wordpress_Module
 			return null;
 		}
 
-		return self::read_json($approot . '/composer.json', 'require.roots/wordpress');
+		return File::read_json($approot . '/composer.json', 'require.roots/wordpress');
 	}
 
 	public function get_environment(string $hostname, string $path = ''): ?string
@@ -174,28 +175,5 @@ class Bedrock_Module extends \Wordpress_Module
 				'status' => $name === $active_environment,
 			];
 		}, $environments);
-	}
-
-	static public function read_json(string $path, $property = null)
-	{
-		$data = null;
-
-		$contents = silence(static function () use ($path)
-		{
-			return file_get_contents($path);
-		});
-
-		if (false !== $contents)
-		{
-			$data = (array)json_decode($contents, true);
-
-			if (!is_null($property))
-			{
-				$dot = new \Adbar\Dot($data);
-				$data = $dot->get($property, null);
-			}
-		}
-
-		return $data;
 	}
 }
