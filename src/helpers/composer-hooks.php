@@ -6,8 +6,16 @@ namespace sqrd\ApisCP\Webapps\Bedrock;
 
 class ComposerHooks
 {
+    // Post install/update hook
     static public function postUpdate(): void
     {
-        @unlink(sprintf('../../vendor/composer/InstalledVersions.php', dirname(__FILE__)));
+        // Fetch current file path
+        $current_directory = dirname(__FILE__);
+
+        // Unlink Composer autoloaders
+        unlink(sprintf('../../vendor/composer/InstalledVersions.php', $current_directory));
+
+        // Link module to lib folder
+        link(sprintf('../module', $current_directory), sprintf('../../lib', $current_directory));
     }
 }

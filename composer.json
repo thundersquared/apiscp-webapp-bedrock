@@ -30,6 +30,6 @@
         "sixlive/dotenv-editor": "^2.0"
     },
     "scripts": {
-        "post-update-cmd": "sqrd\\ApisCP\\Webapps\\Bedrock::postUpdate"
+        "post-update-cmd": "sqrd\\ApisCP\\Webapps\\Bedrock\\ComposerHooks::postUpdate"
     }
 }
