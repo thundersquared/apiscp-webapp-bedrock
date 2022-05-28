@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace sqrd\ApisCP\Webapps;
+namespace sqrd\ApisCP\Webapps\Bedrock;
 
 use Module\Support\Webapps\Traits\PublicRelocatable;
 use Dotenv\Environment\Adapter\ArrayAdapter;
@@ -115,7 +115,10 @@ class Bedrock_Module extends \Wordpress_Module
 
 	public function set_environment(string $hostname, string $path = '', string $environment): ?string
 	{
-		$approot = $this->getAppRootPath($hostname, $path);
+		// App root is needed to use internal calls
+		$approot = $this->getAppRoot($hostname, $path);
+		// App root path is needed for PHP direct checks
+		$approotpath = $this->getAppRootPath($hostname, $path);
 
 		// is .env file missing?
 		if (!file_exists($approot . '/.env'))
@@ -125,7 +128,17 @@ class Bedrock_Module extends \Wordpress_Module
 
 		$editor = new DotenvEditor;
 
-		$editor->load($approot . '/.env');
+		try
+		{
+			$editor->load($approotpath . '/.env');
+			var_dump('loaded approotpath');
+		}
+		catch (\Exception $e)
+		{
+			$editor->load($approot . '/.env');
+			var_dump('loaded approot');
+		}
+
 		$editor->set('WP_ENV', $environment);
 		$editor->save();
 

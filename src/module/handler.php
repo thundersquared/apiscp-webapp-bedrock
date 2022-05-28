@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace sqrd\ApisCP\Webapps;
+namespace sqrd\ApisCP\Webapps\Bedrock;
 
 use Module\Support\Webapps\App\Type\Wordpress\Handler as Wordpress_Handler;
 use Module\Support\Webapps\Traits\PublicRelocatable;
 
 
-class Bedrock_Handler extends Wordpress_Handler
+class Handler extends Wordpress_Handler
 {
 	use PublicRelocatable
 	{
