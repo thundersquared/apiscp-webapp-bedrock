@@ -15,7 +15,7 @@ class Handler extends Wordpress_Handler
 		getAppRoot as getAppRootReal;
 	}
 
-	const NAME = 'Bedrock WordPress';
+	const NAME = 'Bedrock';
 	const ADMIN_PATH = null;
 	const LINK = 'https://roots.io/bedrock/';
 

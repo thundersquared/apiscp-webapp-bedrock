@@ -18,7 +18,7 @@ class Bedrock_Module extends \Wordpress_Module
 		getAppRoot as getAppRootReal;
 	}
 
-	const APP_NAME = 'Bedrock WordPress';
+	const APP_NAME = 'Bedrock';
 
 	protected function getAppRoot(string $hostname, string $path = ''): ?string
 	{
@@ -122,7 +122,7 @@ class Bedrock_Module extends \Wordpress_Module
 		$approotpath = $this->getAppRootPath($hostname, $path);
 
 		// is .env file missing?
-		if (!file_exists($approot . '/.env'))
+		if (!file_exists($approotpath . '/.env'))
 		{
 			return null;
 		}
@@ -131,11 +131,15 @@ class Bedrock_Module extends \Wordpress_Module
 
 		try
 		{
+			var_dump('approotpath');
+			var_dump(file_get_contents($approotpath . '/.env'));
 			$editor->load($approotpath . '/.env');
 			var_dump('loaded approotpath');
 		}
 		catch (\Exception $e)
 		{
+			var_dump('approot');
+			var_dump(file_get_contents($approot . '/.env'));
 			$editor->load($approot . '/.env');
 			var_dump('loaded approot');
 		}
