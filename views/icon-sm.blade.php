@@ -1,6 +1,6 @@
-<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" width="64" height="64"
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
     viewBox="0 0 74 74">
     <path
         d="M1.233 0L0 1.233v16.034l1.057 1.057 34.886-5.815L37 13.567v11.1l35.52-5.92 1.48-1.48V1.233L72.767 0H1.233zm.247 30.587L0 32.067v9.866l1.057 1.057L37 37V24.667l-35.52 5.92zM37 37v12.334l35.52-5.92 1.48-1.48v-9.867l-1.057-1.057L37 37zM1.48 55.253L0 56.733v16.034L1.233 74h71.534L74 72.767V56.733l-1.057-1.057-34.886 5.815L37 60.434v-11.1l-35.52 5.92z"
-        fill="#525DDC" />
+        fill="#ffffff" />
 </svg>
