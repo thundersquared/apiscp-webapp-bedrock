@@ -121,7 +121,7 @@ class Bedrock_Module extends \Wordpress_Module
 		// App root path is needed for PHP direct checks
 		$approotpath = $this->getAppRootPath($hostname, $path);
 
-		$envfile = $approotpath . '/.env';
+		$envfile = $approot . '/.env';
 
 		// Stat .env file to get owner infos
 		$stat = $this->file_stat($envfile);
@@ -145,7 +145,7 @@ class Bedrock_Module extends \Wordpress_Module
 
 		// Open and edit .env
 		$editor = new DotenvEditor;
-		$editor->load($envfile);
+		$editor->load($approotpath . '/.env');
 		$editor->set('WP_ENV', $environment);
 		$editor->save();
 
