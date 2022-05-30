@@ -121,31 +121,36 @@ class Bedrock_Module extends \Wordpress_Module
 		// App root path is needed for PHP direct checks
 		$approotpath = $this->getAppRootPath($hostname, $path);
 
-		// is .env file missing?
-		if (!file_exists($approotpath . '/.env'))
+		$envfile = $approotpath . '/.env';
+
+		// Stat .env file to get owner infos
+		$stat = $this->file_stat($envfile);
+		if (!$stat)
 		{
-			return null;
+			return error("App root `%s' does not exist", $this->appRoot);
 		}
 
+		// Pick correct uid
+		if ($stat['uid'] < \User_Module::MIN_UID)
+		{
+			$user = $this->getAuthContext()->username;
+		}
+		else
+		{
+			$user = $stat['owner'];
+		}
+
+		// Chown to allow panel read/write
+		$this->file_chown($envfile, 'apnscp');
+
+		// Open and edit .env
 		$editor = new DotenvEditor;
-
-		try
-		{
-			var_dump('approotpath');
-			var_dump(file_get_contents($approotpath . '/.env'));
-			$editor->load($approotpath . '/.env');
-			var_dump('loaded approotpath');
-		}
-		catch (\Exception $e)
-		{
-			var_dump('approot');
-			var_dump(file_get_contents($approot . '/.env'));
-			$editor->load($approot . '/.env');
-			var_dump('loaded approot');
-		}
-
+		$editor->load($envfile);
 		$editor->set('WP_ENV', $environment);
 		$editor->save();
+
+		// Re-apply original ownership
+		$this->file_chown($envfile, $user);
 
 		return $editor->getEnv('WP_ENV');
 	}
