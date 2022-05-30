@@ -118,41 +118,14 @@ class Bedrock_Module extends \Wordpress_Module
 	{
 		// App root is needed to use internal calls
 		$approot = $this->getAppRoot($hostname, $path);
-		// App root path is needed for PHP direct checks
-		$approotpath = $this->getAppRootPath($hostname, $path);
 
-		$envfile = $approot . '/.env';
+		// Replace .env value
+		$ret = $this->pman_run('sed -i \'s/^WP_ENV=.*$/WP_ENV=%(environment)s/g\' %(approot)s', [
+			'environment' => $environment,
+			'approot' => $approot . '/.env',
+		]);
 
-		// Stat .env file to get owner infos
-		$stat = $this->file_stat($envfile);
-		if (!$stat)
-		{
-			return error("App root `%s' does not exist", $this->appRoot);
-		}
-
-		// Pick correct uid
-		if ($stat['uid'] < \User_Module::MIN_UID)
-		{
-			$user = $this->getAuthContext()->username;
-		}
-		else
-		{
-			$user = $stat['owner'];
-		}
-
-		// Chown to allow panel read/write
-		$this->file_chown($envfile, 'apnscp');
-
-		// Open and edit .env
-		$editor = new DotenvEditor;
-		$editor->load($approotpath . '/.env');
-		$editor->set('WP_ENV', $environment);
-		$editor->save();
-
-		// Re-apply original ownership
-		$this->file_chown($envfile, $user);
-
-		return $editor->getEnv('WP_ENV');
+		return $ret['success'] ? true : error('Failed to update env: %s', $ret['stderr']);
 	}
 
 	public function get_environments(string $hostname, string $path = ''): ?array
