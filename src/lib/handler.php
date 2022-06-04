@@ -15,13 +15,13 @@ class Handler extends Wordpress_Handler
 		getAppRoot as getAppRootReal;
 	}
 
-	const NAME = 'Bedrock';
-	const ADMIN_PATH = null;
-	const LINK = 'https://roots.io/bedrock/';
+	public const NAME = 'Bedrock';
+	public const ADMIN_PATH = null;
+	public const LINK = 'https://roots.io/bedrock/';
 
-	const DEFAULT_FORTIFICATION = 'max';
-	const FEAT_ALLOW_SSL = true;
-	const FEAT_RECOVERY = false;
+	public const DEFAULT_FORTIFICATION = 'max';
+	public const FEAT_ALLOW_SSL = true;
+	public const FEAT_RECOVERY = false;
 
 	public function getClassMapping(): string
 	{
