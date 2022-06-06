@@ -53,6 +53,19 @@ class Bedrock_Module extends \Wordpress_Module
 		return $approot;
 	}
 
+    /**
+     * Install WordPress
+     *
+     * @param string $hostname domain or subdomain to install WordPress
+     * @param string $path     optional path under hostname
+     * @param array  $opts     additional install options
+     * @return bool
+     */
+    public function install(string $hostname, string $path = '', array $opts = array()): bool
+    {
+        return false;
+    }
+
 	/**
 	 * Get available versions
 	 *
