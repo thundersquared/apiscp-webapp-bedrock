@@ -127,7 +127,7 @@ class Bedrock_Module extends \Wordpress_Module
 		return $variables['WP_ENV'];
 	}
 
-	public function set_environment(string $hostname, string $path = '', string $environment): ?bool
+	public function set_environment(string $hostname, string $path = '', string $environment = 'development˙'): ?bool
 	{
 		// App root is needed to use internal calls
 		$approot = $this->getAppRoot($hostname, $path);
