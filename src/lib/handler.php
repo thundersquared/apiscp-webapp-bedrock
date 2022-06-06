@@ -9,11 +9,6 @@ use Module\Support\Webapps\Traits\PublicRelocatable;
 
 class Handler extends Wordpress_Handler
 {
-    use PublicRelocatable
-    {
-        getAppRoot as getAppRootReal;
-    }
-
     public const NAME = 'Bedrock';
     public const ADMIN_PATH = null;
     public const LINK = 'https://roots.io/bedrock/';
@@ -36,11 +31,6 @@ class Handler extends Wordpress_Handler
     public function display(): bool
     {
         return true;
-    }
-
-    public function getAppRoot(): ?string
-    {
-        return $this->getAppRootReal($this->getHostname(), $this->getPath());
     }
 
     public function getVersions(): array
