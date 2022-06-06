@@ -27,11 +27,5 @@
     "require": {
         "adbario/php-dot-notation": "^3.1",
         "sixlive/dotenv-editor": "^2.0"
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "@sqrd-cleanup-composer"
-        ],
-        "sqrd-cleanup-composer": "rm -f vendor/composer/InstalledVersions.php"
     }
 }
