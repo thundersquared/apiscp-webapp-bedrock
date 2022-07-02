@@ -85,11 +85,11 @@ class Bedrock_Module extends \Wordpress_Module
         }
 
         $ret = $this->execComposer($docroot,
-            'create-project --prefer-dist %(package)s %(docroot)s \'%(version)s\'',
+            'create-project --prefer-dist %(package)s %(docroot)s %(version)s',
             [
                 'package' => static::PACKAGIST_NAME,
                 'docroot' => $docroot,
-                'version' => $opts['version']
+                'version' => $opts['version'],
             ]
         );
 
