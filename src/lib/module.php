@@ -19,8 +19,7 @@ class Bedrock_Module extends \Wordpress_Module
 
     protected function getAppRoot(string $hostname, string $path = ''): ?string
     {
-        if (file_exists($tmp = $this->getDocumentRoot($hostname, $path) . '/wp-config.php'))
-        {
+        if (file_exists($tmp = $this->getDocumentRoot($hostname, $path) . '/wp-config.php')) {
             return $tmp;
         }
 
@@ -29,19 +28,14 @@ class Bedrock_Module extends \Wordpress_Module
 
     protected function getAppRootPath(string $hostname, string $path = ''): ?string
     {
-        if ($hostname[0] === '/')
-        {
-            if (!($path = realpath($this->domain_fs_path($hostname))))
-            {
+        if ($hostname[0] === '/') {
+            if (!($path = realpath($this->domain_fs_path($hostname)))) {
                 return null;
             }
             $approot = \dirname($path);
-        }
-        else
-        {
+        } else {
             $approot = $this->getAppRoot($hostname, $path);
-            if (!$approot)
-            {
+            if (!$approot) {
                 return null;
             }
             $approot = $this->domain_fs_path($approot);
@@ -76,8 +70,7 @@ class Bedrock_Module extends \Wordpress_Module
 
         // Attempt to retrieve cached versions
         $cache = \Cache_Super_Global::spawn();
-        if (false !== ($ver = $cache->get($key)))
-        {
+        if (false !== ($ver = $cache->get($key))) {
             return $ver;
         }
 
@@ -85,8 +78,7 @@ class Bedrock_Module extends \Wordpress_Module
         $url = self::VERSION_CHECK_URL;
         $context = stream_context_create(['http' => ['timeout' => 5]]);
         $contents = file_get_contents($url, false, $context);
-        if (!$contents)
-        {
+        if (!$contents) {
             return array();
         }
         $versions = json_decode($contents, true);
@@ -118,16 +110,14 @@ class Bedrock_Module extends \Wordpress_Module
 
     public function get_version(string $hostname, string $path = ''): ?string
     {
-        if (!$this->valid($hostname, $path))
-        {
+        if (!$this->valid($hostname, $path)) {
             return null;
         }
 
         $approot = $this->getAppRootPath($hostname, $path);
 
         // is composer.json file missing?
-        if (!file_exists($approot . '/composer.json'))
-        {
+        if (!file_exists($approot . '/composer.json')) {
             return null;
         }
 
@@ -139,8 +129,7 @@ class Bedrock_Module extends \Wordpress_Module
         $approot = $this->getAppRootPath($hostname, $path);
 
         // is .env file missing?
-        if (!file_exists($approot . '/.env'))
-        {
+        if (!file_exists($approot . '/.env')) {
             return null;
         }
 
@@ -175,8 +164,7 @@ class Bedrock_Module extends \Wordpress_Module
         $approotpath = $this->getAppRootPath($hostname, $path);
 
         // is config/environments/ dir missing?
-        if (!is_dir($approotpath . '/config/environments/'))
-        {
+        if (!is_dir($approotpath . '/config/environments/')) {
             return null;
         }
 
