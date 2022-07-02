@@ -33,11 +33,6 @@ class Handler extends Wordpress_Handler
         return true;
     }
 
-    public function getVersions(): array
-    {
-        return ['1.0'];
-    }
-
     public function getInstallableVersions(): array
     {
         return $this->getVersions();
