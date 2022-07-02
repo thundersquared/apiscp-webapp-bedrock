@@ -93,7 +93,7 @@ class Bedrock_Module extends \Wordpress_Module
 
         // Cleanup before storage
         $versions = array_pop($versions['packages']);
-        $versions = array_column($versions, 'version');
+        $versions = array_reverse(array_column($versions, 'version'));
         $cache->set($key, $versions, 43200);
 
         return $versions;
