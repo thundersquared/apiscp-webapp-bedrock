@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace sqrd\ApisCP\Webapps\Bedrock;
 
+use Module\Support\Webapps\App\Type\Wordpress\Wpcli;
 use Module\Support\Webapps\ComposerWrapper;
 use Module\Support\Webapps\DatabaseGenerator;
 use Module\Support\Webapps\Traits\PublicRelocatable;
@@ -87,13 +88,11 @@ class Bedrock_Module extends \Wordpress_Module
         return ComposerWrapper::instantiateContexted($this->getAuthContext())->exec($path, $cmd, $args);
     }
 
-    protected function generateNewConfiguration(string $domain, string $docroot, DatabaseGenerator $dbcredentials, array $ftpcredentials = array()): bool
+    protected function generateNewConfiguration(string $hostname, string $docroot, DatabaseGenerator $dbcredentials, array $ftpcredentials = array()): bool
     {
-        $approot = $this->getAppRoot($domain, $docroot);
-
         $steps = [
             'generate new salts' => ["dotenv salts generate", []],
-            'set WP_HOME' => ["dotenv set WP_HOME '%(domain)s'", ['domain' => $domain]],
+            'set WP_HOME' => ["dotenv set WP_HOME '%(domain)s'", ['domain' => $hostname]],
             'set DB_NAME' => ["dotenv set DB_NAME '%(name)s'", ['name' => $dbcredentials->database]],
             'set DB_USER' => ["dotenv set DB_USER '%(user)s'", ['user' => $dbcredentials->username]],
             'set DB_PASSWORD' => ["dotenv set DB_PASSWORD '%(password)s'", ['password' => $dbcredentials->password]],
@@ -101,7 +100,7 @@ class Bedrock_Module extends \Wordpress_Module
 
         foreach ($steps as $name => $actions)
         {
-            $ret = $this->execCommand($approot, $actions[0], $actions[1]);
+            $ret = $this->execCommand($docroot, $actions[0], $actions[1]);
             if (!$ret['success'])
             {
                 return error('failed to %s, error: %s', $name, coalesce($ret['stderr'], $ret['stdout']));
@@ -139,7 +138,7 @@ class Bedrock_Module extends \Wordpress_Module
             return error('Composer projects may only be installed directly on a subdomain or domain without a child path, e.g. https://domain.com but not https://domain.com/laravel');
         }
 
-        if (!($docroot = $this->getDocumentRoot($hostname, $path)))
+        if (!($approot = $this->getAppRoot($hostname, $path)))
         {
             return error("failed to normalize path for `%s'", $hostname);
         }
@@ -150,7 +149,7 @@ class Bedrock_Module extends \Wordpress_Module
         }
 
         // Install dotenv command
-        $ret = $this->execCommand($docroot, 'package install %(dotenvcmd)s ', [
+        $ret = $this->execCommand($approot, 'package install %(dotenvcmd)s ', [
             'dotenvcmd' => static::DOTENV_COMMAND,
         ]);
         if (!$ret['success'])
@@ -160,16 +159,16 @@ class Bedrock_Module extends \Wordpress_Module
 
         // Create Bedrock project with specified version
         $lock = $this->parseLock($opts['verlock'], $opts['version']);
-        $ret = $this->execComposer($docroot, 'create-project --prefer-dist %(package)s %(docroot)s \'%(version)s\'', [
+        $ret = $this->execComposer($approot, 'create-project --prefer-dist %(package)s %(approot)s \'%(version)s\'', [
             'package' => static::PACKAGIST_NAME,
-            'docroot' => $docroot,
+            'approot' => $approot,
             'version' => $lock,
         ]);
 
         // Rollback on failure
         if (!$ret['success'])
         {
-            $this->file_delete($docroot, true);
+            $this->file_delete($approot, true);
 
             return error('failed to download roots/bedrock package: %s %s',
                 $ret['stderr'], $ret['stdout']
@@ -184,12 +183,12 @@ class Bedrock_Module extends \Wordpress_Module
         }
 
         // Fill in .env file
-        if (!$this->generateNewConfiguration($hostname, $docroot, $dbCred))
+        if (!$this->generateNewConfiguration($hostname, $approot, $dbCred))
         {
             info('removing temporary files');
             if (!array_get($opts, 'hold'))
             {
-                $this->file_delete($docroot, true);
+                $this->file_delete($approot, true);
                 $dbCred->rollback();
             }
             return false;
@@ -220,7 +219,7 @@ class Bedrock_Module extends \Wordpress_Module
             'proto' => !empty($opts['ssl']) ? 'https://' : 'http://',
             'mysqli81' => 'function_exists("mysqli_report") && mysqli_report(0);'
         );
-        $ret = $this->execCommand($docroot, 'core %(mode)s --admin_email=%(email)s --skip-email ' .
+        $ret = $this->execCommand($approot, 'core %(mode)s --admin_email=%(email)s --skip-email ' .
             '--url=%(proto)s%(url)s --title=%(title)s --admin_user=%(user)s --exec=%(mysqli81)s ' .
             '--admin_password=%(password)s', $args);
         if (!$ret['success'])
@@ -235,7 +234,7 @@ class Bedrock_Module extends \Wordpress_Module
         $wpcli = Wpcli::instantiateContexted($this->getAuthContext());
         $wpcli->setConfiguration(['apache_modules' => ['mod_rewrite']]);
 
-        $ret = $this->execCommand($docroot, "rewrite structure --hard '/%%postname%%/'");
+        $ret = $this->execCommand($approot, "rewrite structure --hard '/%%postname%%/'");
         if (!$ret['success'])
         {
             return error('failed to set rewrite structure, error: %s', coalesce($ret['stderr'], $ret['stdout']));
@@ -244,7 +243,7 @@ class Bedrock_Module extends \Wordpress_Module
         // Remap public to web dir instead of app dir
         if (null === ($docroot = $this->remapPublic($hostname, $path, 'web/')))
         {
-            $this->file_delete($docroot, true);
+            $this->file_delete($approot, true);
 
             return error("Failed to remap Bedrock to web/, manually remap from `%s' - Bedrock setup is incomplete!",
                 $docroot);
