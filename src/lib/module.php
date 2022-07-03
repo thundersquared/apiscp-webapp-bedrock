@@ -158,14 +158,11 @@ class Bedrock_Module extends \Wordpress_Module
 
         // Create Bedrock project with specified version
         $lock = $this->parseLock($opts['verlock'], $opts['version']);
-        $ret = $this->execComposer($docroot,
-            'create-project --prefer-dist %(package)s %(docroot)s \'%(version)s\'',
-            [
-                'package' => static::PACKAGIST_NAME,
-                'docroot' => $docroot,
-                'version' => $lock,
-            ]
-        );
+        $ret = $this->execComposer($docroot, 'create-project --prefer-dist %(package)s %(docroot)s \'%(version)s\'', [
+            'package' => static::PACKAGIST_NAME,
+            'docroot' => $docroot,
+            'version' => $lock,
+        ]);
 
         // Rollback on failure
         if (!$ret['success'])
@@ -175,15 +172,6 @@ class Bedrock_Module extends \Wordpress_Module
             return error('failed to download roots/bedrock package: %s %s',
                 $ret['stderr'], $ret['stdout']
             );
-        }
-
-        // Remap public to web dir instead of app dir
-        if (null === ($docroot = $this->remapPublic($hostname, $path, 'web/')))
-        {
-            $this->file_delete($docroot, true);
-
-            return error("Failed to remap Bedrock to web/, manually remap from `%s' - Bedrock setup is incomplete!",
-                $docroot);
         }
 
         // Create new database
@@ -249,6 +237,15 @@ class Bedrock_Module extends \Wordpress_Module
         if (!$ret['success'])
         {
             return error('failed to set rewrite structure, error: %s', coalesce($ret['stderr'], $ret['stdout']));
+        }
+
+        // Remap public to web dir instead of app dir
+        if (null === ($docroot = $this->remapPublic($hostname, $path, 'web/')))
+        {
+            $this->file_delete($docroot, true);
+
+            return error("Failed to remap Bedrock to web/, manually remap from `%s' - Bedrock setup is incomplete!",
+                $docroot);
         }
 
         return true;
