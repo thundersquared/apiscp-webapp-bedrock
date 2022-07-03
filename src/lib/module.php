@@ -388,4 +388,17 @@ class Bedrock_Module extends \Wordpress_Module
             ];
         }, $environments);
     }
+
+    /**
+     * Update core, plugins, and themes atomically
+     *
+     * @param string $hostname subdomain or domain
+     * @param string $path optional path under hostname
+     * @param string $version
+     * @return bool
+     */
+    public function update_all(string $hostname, string $path = '', string $version = null): bool
+    {
+        return parent::update_all($hostname, $path, $version);
+    }
 }
