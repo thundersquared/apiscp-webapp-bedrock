@@ -89,6 +89,8 @@ class Bedrock_Module extends \Wordpress_Module
 
     protected function generateNewConfiguration(string $domain, string $docroot, DatabaseGenerator $dbcredentials, array $ftpcredentials = array()): bool
     {
+        $approot = $this->getAppRoot($domain, $docroot);
+
         $steps = [
             'generate new salts' => ["dotenv salts generate", []],
             'set WP_HOME' => ["dotenv set WP_HOME '%(domain)s'", ['domain' => $domain]],
@@ -99,7 +101,7 @@ class Bedrock_Module extends \Wordpress_Module
 
         foreach ($steps as $name => $actions)
         {
-            $ret = $this->execCommand($docroot, $actions[0], $actions[1]);
+            $ret = $this->execCommand($approot, $actions[0], $actions[1]);
             if (!$ret['success'])
             {
                 return error('failed to %s, error: %s', $name, coalesce($ret['stderr'], $ret['stdout']));
