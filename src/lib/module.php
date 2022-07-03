@@ -26,8 +26,7 @@ class Bedrock_Module extends \Wordpress_Module
 
     protected function getAppRoot(string $hostname, string $path = ''): ?string
     {
-        if (file_exists($tmp = $this->getDocumentRoot($hostname, $path) . '/wp-config.php'))
-        {
+        if (file_exists($tmp = $this->getDocumentRoot($hostname, $path) . '/wp-config.php')) {
             return $tmp;
         }
 
@@ -36,19 +35,14 @@ class Bedrock_Module extends \Wordpress_Module
 
     protected function getAppRootPath(string $hostname, string $path = ''): ?string
     {
-        if ($hostname[0] === '/')
-        {
-            if (!($path = realpath($this->domain_fs_path($hostname))))
-            {
+        if ($hostname[0] === '/') {
+            if (!($path = realpath($this->domain_fs_path($hostname)))) {
                 return null;
             }
             $approot = \dirname($path);
-        }
-        else
-        {
+        } else {
             $approot = $this->getAppRoot($hostname, $path);
-            if (!$approot)
-            {
+            if (!$approot) {
                 return null;
             }
             $approot = $this->domain_fs_path($approot);
@@ -66,8 +60,7 @@ class Bedrock_Module extends \Wordpress_Module
      */
     protected function parseLock(string $lockType, string $version): string
     {
-        switch ($lockType)
-        {
+        switch ($lockType) {
             case 'major':
                 return '~' . Versioning::asMinor($version);
             case 'minor':
@@ -98,11 +91,9 @@ class Bedrock_Module extends \Wordpress_Module
             'set DB_PASSWORD' => ["dotenv set DB_PASSWORD '%(password)s'", ['password' => $dbcredentials->password]],
         ];
 
-        foreach ($steps as $name => $actions)
-        {
+        foreach ($steps as $name => $actions) {
             $ret = $this->execCommand($docroot, $actions[0], $actions[1]);
-            if (!$ret['success'])
-            {
+            if (!$ret['success']) {
                 return error('failed to %s, error: %s', $name, coalesce($ret['stderr'], $ret['stdout']));
             }
         }
@@ -120,31 +111,28 @@ class Bedrock_Module extends \Wordpress_Module
      */
     public function install(string $hostname, string $path = '', array $opts = array()): bool
     {
-        if (!$this->mysql_enabled())
-        {
-            return error('%(what)s must be enabled to install %(app)s',
-                ['what' => 'MySQL', 'app' => static::APP_NAME]);
+        if (!$this->mysql_enabled()) {
+            return error(
+                '%(what)s must be enabled to install %(app)s',
+                ['what' => 'MySQL', 'app' => static::APP_NAME]
+            );
         }
 
-        if (!$this->php_composer_exists())
-        {
+        if (!$this->php_composer_exists()) {
             return error('composer missing! contact sysadmin');
         }
 
         // Same situation as with Ghost. We can't install under a path for fear of
         // leaking information
-        if ($path)
-        {
+        if ($path) {
             return error('Composer projects may only be installed directly on a subdomain or domain without a child path, e.g. https://domain.com but not https://domain.com/laravel');
         }
 
-        if (!($approot = $this->getAppRootPath($hostname, $path)))
-        {
+        if (!($approot = $this->getAppRootPath($hostname, $path))) {
             return error("failed to normalize path for `%s'", $hostname);
         }
 
-        if (!$this->parseInstallOptions($opts, $hostname, $path))
-        {
+        if (!$this->parseInstallOptions($opts, $hostname, $path)) {
             return false;
         }
 
@@ -152,8 +140,7 @@ class Bedrock_Module extends \Wordpress_Module
         $ret = $this->execCommand($approot, 'package install %(dotenvcmd)s ', [
             'dotenvcmd' => static::DOTENV_COMMAND,
         ]);
-        if (!$ret['success'])
-        {
+        if (!$ret['success']) {
             return error('failed to install dotenv command, error: %s', coalesce($ret['stderr'], $ret['stdout']));
         }
 
@@ -166,41 +153,37 @@ class Bedrock_Module extends \Wordpress_Module
         ]);
 
         // Rollback on failure
-        if (!$ret['success'])
-        {
+        if (!$ret['success']) {
             $this->file_delete($approot, true);
 
-            return error('failed to download roots/bedrock package: %s %s',
-                $ret['stderr'], $ret['stdout']
+            return error(
+                'failed to download roots/bedrock package: %s %s',
+                $ret['stderr'],
+                $ret['stdout']
             );
         }
 
         // Create new database
         $dbCred = DatabaseGenerator::mysql($this->getAuthContext(), $hostname);
-        if (!$dbCred->create())
-        {
+        if (!$dbCred->create()) {
             return false;
         }
 
         // Fill in .env file
-        if (!$this->generateNewConfiguration($hostname, $approot, $dbCred))
-        {
+        if (!$this->generateNewConfiguration($hostname, $approot, $dbCred)) {
             info('removing temporary files');
-            if (!array_get($opts, 'hold'))
-            {
+            if (!array_get($opts, 'hold')) {
                 $this->file_delete($approot, true);
                 $dbCred->rollback();
             }
             return false;
         }
 
-        if (!isset($opts['title']))
-        {
+        if (!isset($opts['title'])) {
             $opts['title'] = 'A Random Blog for a Random Reason';
         }
 
-        if (!isset($opts['password']))
-        {
+        if (!isset($opts['password'])) {
             $opts['password'] = Password::generate();
             info("autogenerated password `%s'", $opts['password']);
         }
@@ -222,10 +205,8 @@ class Bedrock_Module extends \Wordpress_Module
         $ret = $this->execCommand($approot, 'core %(mode)s --admin_email=%(email)s --skip-email ' .
             '--url=%(proto)s%(url)s --title=%(title)s --admin_user=%(user)s --exec=%(mysqli81)s ' .
             '--admin_password=%(password)s', $args);
-        if (!$ret['success'])
-        {
-            if (!array_get($opts, 'hold'))
-            {
+        if (!$ret['success']) {
+            if (!array_get($opts, 'hold')) {
                 $dbCred->rollback();
             }
             return error('failed to create database structure: %s', coalesce($ret['stderr'], $ret['stdout']));
@@ -235,18 +216,18 @@ class Bedrock_Module extends \Wordpress_Module
         $wpcli->setConfiguration(['apache_modules' => ['mod_rewrite']]);
 
         $ret = $this->execCommand($approot, "rewrite structure --hard '/%%postname%%/'");
-        if (!$ret['success'])
-        {
+        if (!$ret['success']) {
             return error('failed to set rewrite structure, error: %s', coalesce($ret['stderr'], $ret['stdout']));
         }
 
         // Remap public to web dir instead of app dir
-        if (null === ($docroot = $this->remapPublic($hostname, $path, 'web/')))
-        {
+        if (null === ($docroot = $this->remapPublic($hostname, $path, 'web/'))) {
             $this->file_delete($approot, true);
 
-            return error("Failed to remap Bedrock to web/, manually remap from `%s' - Bedrock setup is incomplete!",
-                $docroot);
+            return error(
+                "Failed to remap Bedrock to web/, manually remap from `%s' - Bedrock setup is incomplete!",
+                $docroot
+            );
         }
 
         return true;
@@ -265,8 +246,7 @@ class Bedrock_Module extends \Wordpress_Module
 
         // Attempt to retrieve cached versions
         $cache = \Cache_Super_Global::spawn();
-        if (false !== ($ver = $cache->get($key)))
-        {
+        if (false !== ($ver = $cache->get($key))) {
             return $ver;
         }
 
@@ -274,8 +254,7 @@ class Bedrock_Module extends \Wordpress_Module
         $url = self::VERSION_CHECK_URL;
         $context = stream_context_create(['http' => ['timeout' => 5]]);
         $contents = file_get_contents($url, false, $context);
-        if (!$contents)
-        {
+        if (!$contents) {
             return array();
         }
         $versions = json_decode($contents, true);
@@ -307,16 +286,14 @@ class Bedrock_Module extends \Wordpress_Module
 
     public function get_version(string $hostname, string $path = ''): ?string
     {
-        if (!$this->valid($hostname, $path))
-        {
+        if (!$this->valid($hostname, $path)) {
             return null;
         }
 
         $approot = $this->getAppRootPath($hostname, $path);
 
         // is composer.json file missing?
-        if (!file_exists($approot . '/composer.json'))
-        {
+        if (!file_exists($approot . '/composer.json')) {
             return null;
         }
 
@@ -331,8 +308,7 @@ class Bedrock_Module extends \Wordpress_Module
         // Read .env value
         $ret = $this->execCommand($approot, "dotenv get WP_ENV");
 
-        if (!$ret['success'])
-        {
+        if (!$ret['success']) {
             return error('failed to read env: %s', coalesce($ret['stderr'], $ret['stdout']));
         }
 
@@ -349,8 +325,7 @@ class Bedrock_Module extends \Wordpress_Module
             'environment' => $environment,
         ]);
 
-        if (!$ret['success'])
-        {
+        if (!$ret['success']) {
             return error('failed to update env: %s', coalesce($ret['stderr'], $ret['stdout']));
         }
 
@@ -365,8 +340,7 @@ class Bedrock_Module extends \Wordpress_Module
         $approotpath = $this->getAppRootPath($hostname, $path);
 
         // is config/environments/ dir missing?
-        if (!is_dir($approotpath . '/config/environments/'))
-        {
+        if (!is_dir($approotpath . '/config/environments/')) {
             return null;
         }
 
