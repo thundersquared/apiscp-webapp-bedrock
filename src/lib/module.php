@@ -138,7 +138,7 @@ class Bedrock_Module extends \Wordpress_Module
             return error('Composer projects may only be installed directly on a subdomain or domain without a child path, e.g. https://domain.com but not https://domain.com/laravel');
         }
 
-        if (!($approot = $this->getAppRootPath($hostname, $path)))
+        if (!($docroot = $this->getDocumentRoot($hostname, $path)))
         {
             return error("failed to normalize path for `%s'", $hostname);
         }
@@ -149,7 +149,7 @@ class Bedrock_Module extends \Wordpress_Module
         }
 
         // Install dotenv command
-        $ret = $this->execCommand($approot, 'package install %(dotenvcmd)s ', [
+        $ret = $this->execCommand($docroot, 'package install %(dotenvcmd)s ', [
             'dotenvcmd' => static::DOTENV_COMMAND,
         ]);
         if (!$ret['success'])
@@ -159,16 +159,16 @@ class Bedrock_Module extends \Wordpress_Module
 
         // Create Bedrock project with specified version
         $lock = $this->parseLock($opts['verlock'], $opts['version']);
-        $ret = $this->execComposer($approot, 'create-project --prefer-dist %(package)s %(approot)s \'%(version)s\'', [
+        $ret = $this->execComposer($docroot, 'create-project --prefer-dist %(package)s %(docroot)s \'%(version)s\'', [
             'package' => static::PACKAGIST_NAME,
-            'approot' => $approot,
+            'docroot' => $docroot,
             'version' => $lock,
         ]);
 
         // Rollback on failure
         if (!$ret['success'])
         {
-            $this->file_delete($approot, true);
+            $this->file_delete($docroot, true);
 
             return error('failed to download roots/bedrock package: %s %s',
                 $ret['stderr'], $ret['stdout']
@@ -183,12 +183,12 @@ class Bedrock_Module extends \Wordpress_Module
         }
 
         // Fill in .env file
-        if (!$this->generateNewConfiguration($hostname, $approot, $dbCred))
+        if (!$this->generateNewConfiguration($hostname, $docroot, $dbCred))
         {
             info('removing temporary files');
             if (!array_get($opts, 'hold'))
             {
-                $this->file_delete($approot, true);
+                $this->file_delete($docroot, true);
                 $dbCred->rollback();
             }
             return false;
@@ -219,7 +219,7 @@ class Bedrock_Module extends \Wordpress_Module
             'proto' => !empty($opts['ssl']) ? 'https://' : 'http://',
             'mysqli81' => 'function_exists("mysqli_report") && mysqli_report(0);'
         );
-        $ret = $this->execCommand($approot, 'core %(mode)s --admin_email=%(email)s --skip-email ' .
+        $ret = $this->execCommand($docroot, 'core %(mode)s --admin_email=%(email)s --skip-email ' .
             '--url=%(proto)s%(url)s --title=%(title)s --admin_user=%(user)s --exec=%(mysqli81)s ' .
             '--admin_password=%(password)s', $args);
         if (!$ret['success'])
@@ -234,17 +234,15 @@ class Bedrock_Module extends \Wordpress_Module
         $wpcli = Wpcli::instantiateContexted($this->getAuthContext());
         $wpcli->setConfiguration(['apache_modules' => ['mod_rewrite']]);
 
-        $ret = $this->execCommand($approot, "rewrite structure --hard '/%%postname%%/'");
+        $ret = $this->execCommand($docroot, "rewrite structure --hard '/%%postname%%/'");
         if (!$ret['success'])
         {
             return error('failed to set rewrite structure, error: %s', coalesce($ret['stderr'], $ret['stdout']));
         }
 
         // Remap public to web dir instead of app dir
-        if (null === ($docroot = $this->remapPublic($hostname, $path, 'web/')))
+        if (null === $this->remapPublic($hostname, $path, 'web/'))
         {
-            $this->file_delete($approot, true);
-
             return error("Failed to remap Bedrock to web/, manually remap from `%s' - Bedrock setup is incomplete!",
                 $docroot);
         }
@@ -325,11 +323,10 @@ class Bedrock_Module extends \Wordpress_Module
 
     public function get_environment(string $hostname, string $path = ''): ?string
     {
-        // App root is needed to use internal calls
-        $approot = $this->getAppRoot($hostname, $path);
+        $approotpath = $this->getAppRootPath($hostname, $path);
 
         // Read .env value
-        $ret = $this->execCommand($approot, "dotenv get WP_ENV");
+        $ret = $this->execCommand($approotpath, "dotenv get WP_ENV");
 
         if (!$ret['success'])
         {
@@ -341,11 +338,10 @@ class Bedrock_Module extends \Wordpress_Module
 
     public function set_environment(string $hostname, string $path = '', string $environment = 'development˙'): ?bool
     {
-        // App root is needed to use internal calls
-        $approot = $this->getAppRoot($hostname, $path);
+        $approotpath = $this->getAppRootPath($hostname, $path);
 
         // Replace .env value
-        $ret = $this->execCommand($approot, "dotenv set WP_ENV %(environment)s", [
+        $ret = $this->execCommand($approotpath, "dotenv set WP_ENV %(environment)s", [
             'environment' => $environment,
         ]);
 
