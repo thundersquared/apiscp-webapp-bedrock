@@ -10,7 +10,7 @@ use Module\Support\Webapps\Traits\PublicRelocatable;
 use Opcenter\Auth\Password;
 use sqrd\ApisCP\Webapps\Bedrock\Helpers\File;
 
-class Bedrock_Module extends \Wordpress_Module implements \Laravel_Module
+class Bedrock_Module extends \Wordpress_Module
 {
     use PublicRelocatable
     {
