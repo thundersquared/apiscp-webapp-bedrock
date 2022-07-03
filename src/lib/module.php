@@ -8,8 +8,6 @@ use Module\Support\Webapps\ComposerWrapper;
 use Module\Support\Webapps\DatabaseGenerator;
 use Module\Support\Webapps\Traits\PublicRelocatable;
 use Opcenter\Auth\Password;
-use Opcenter\Provisioning\ConfigurationWriter;
-use Opcenter\SiteConfiguration;
 use Opcenter\Versioning;
 use sqrd\ApisCP\Webapps\Bedrock\Helpers\File;
 
@@ -99,7 +97,8 @@ class Bedrock_Module extends \Wordpress_Module
             'set DB_PASSWORD' => ["dotenv set DB_PASSWORD '%(password)s'", ['password' => $dbcredentials->password]],
         ];
 
-        foreach ($steps as $name => $actions) {
+        foreach ($steps as $name => $actions)
+        {
             $ret = $this->execCommand($docroot, $actions[0], $actions[1]);
             if (!$ret['success'])
             {
@@ -334,7 +333,12 @@ class Bedrock_Module extends \Wordpress_Module
         // Read .env value
         $ret = $this->execCommand($approot, "dotenv get WP_ENV");
 
-        return $ret['success'] ? $ret['stdout'] : error('failed to read env: %s', coalesce($ret['stderr'], $ret['stdout']));
+        if (!$ret['success'])
+        {
+            return error('failed to read env: %s', coalesce($ret['stderr'], $ret['stdout']));
+        }
+
+        return trim($ret['stdout']);
     }
 
     public function set_environment(string $hostname, string $path = '', string $environment = 'development˙'): ?bool
@@ -347,7 +351,12 @@ class Bedrock_Module extends \Wordpress_Module
             'environment' => $environment,
         ]);
 
-        return $ret['success'] ? true : error('failed to update env: %s', coalesce($ret['stderr'], $ret['stdout']));
+        if (!$ret['success'])
+        {
+            return error('failed to update env: %s', coalesce($ret['stderr'], $ret['stdout']));
+        }
+
+        return true;
     }
 
     public function get_environments(string $hostname, string $path = ''): ?array
