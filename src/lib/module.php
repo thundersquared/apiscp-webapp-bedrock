@@ -138,7 +138,7 @@ class Bedrock_Module extends \Wordpress_Module
             return error('Composer projects may only be installed directly on a subdomain or domain without a child path, e.g. https://domain.com but not https://domain.com/laravel');
         }
 
-        if (!($approot = $this->getAppRoot($hostname, $path)))
+        if (!($approot = $this->getAppRootPath($hostname, $path)))
         {
             return error("failed to normalize path for `%s'", $hostname);
         }
