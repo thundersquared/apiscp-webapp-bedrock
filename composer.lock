@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "23f0d825a03fc4e92e1f171f292049cf",
+    "content-hash": "58a4cce9a307d438c688ea279177464a",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
-            "version": "3.1.1",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adbario/php-dot-notation.git",
-                "reference": "aca06bf775809808232b8c21ce1ca3a4fca70ace"
+                "reference": "a94ce4493d19ea430baa8d7d210a2c9bd7129fc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/aca06bf775809808232b8c21ce1ca3a4fca70ace",
-                "reference": "aca06bf775809808232b8c21ce1ca3a4fca70ace",
+                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/a94ce4493d19ea430baa8d7d210a2c9bd7129fc2",
+                "reference": "a94ce4493d19ea430baa8d7d210a2c9bd7129fc2",
                 "shasum": ""
             },
             "require": {
@@ -25,9 +25,9 @@
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan": "^1.8",
                 "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.6"
+                "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
             "autoload": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/adbario/php-dot-notation/issues",
-                "source": "https://github.com/adbario/php-dot-notation/tree/3.1.1"
+                "source": "https://github.com/adbario/php-dot-notation/tree/3.3.0"
             },
-            "time": "2022-03-28T01:09:30+00:00"
+            "time": "2023-02-24T20:27:50+00:00"
         }
     ],
     "packages-dev": [],

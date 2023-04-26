@@ -103,7 +103,7 @@ class Bedrock_Module extends \Wordpress_Module
             $ret = $this->execCommand($docroot, $actions[0], $actions[1]);
             if (!$ret['success'])
             {
-                return error('failed to %s, error: %s', $name, coalesce($ret['stderr'], $ret['stdout']));
+                return error('failed to %s, error: %s', $name, coalesce($hostname, $docroot, $ret['stderr'], $ret['stdout']));
             }
         }
 
