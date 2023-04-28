@@ -24,7 +24,8 @@
         "prepend-autoloader": false
     },
     "type": "apiscp-webapp",
+    "minimum-stability": "dev",
     "require": {
-        "adbario/php-dot-notation": "^3.3"
+        "web-fu/php-dot-notation": "dev-main"
     }
 }

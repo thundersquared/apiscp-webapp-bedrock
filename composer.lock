@@ -4,38 +4,37 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58a4cce9a307d438c688ea279177464a",
+    "content-hash": "6638df3c59db789e7008f998dce48d34",
     "packages": [
         {
-            "name": "adbario/php-dot-notation",
-            "version": "3.3.0",
+            "name": "web-fu/php-dot-notation",
+            "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/adbario/php-dot-notation.git",
-                "reference": "a94ce4493d19ea430baa8d7d210a2c9bd7129fc2"
+                "url": "https://github.com/web-fu/php-dot-notation.git",
+                "reference": "949adcb7293f986e68cf45811431bf8e04c2e09a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/a94ce4493d19ea430baa8d7d210a2c9bd7129fc2",
-                "reference": "a94ce4493d19ea430baa8d7d210a2c9bd7129fc2",
+                "url": "https://api.github.com/repos/web-fu/php-dot-notation/zipball/949adcb7293f986e68cf45811431bf8e04c2e09a",
+                "reference": "949adcb7293f986e68cf45811431bf8e04c2e09a",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
-                "php": "^7.4 || ^8.0"
+                "php": "8.0.* || 8.1.* || 8.2.*"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.8",
+                "friendsofphp/php-cs-fixer": "^3.13",
+                "phpstan/phpstan": "^1.9",
                 "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.7"
+                "vimeo/psalm": "^5.4",
+                "web-fu/reflection": "dev-main"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
                 "psr-4": {
-                    "Adbar\\": "src"
+                    "WebFu\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -44,26 +43,29 @@
             ],
             "authors": [
                 {
-                    "name": "Riku Särkinen",
-                    "email": "riku@adbar.io"
+                    "name": "Gabriele Manganello",
+                    "email": "info@web-fu.it",
+                    "homepage": "https://web-fu.it"
                 }
             ],
-            "description": "PHP dot notation access to arrays",
-            "homepage": "https://github.com/adbario/php-dot-notation",
+            "description": "Library that allows to access array and object with strong type support in Dot Notation",
             "keywords": [
-                "ArrayAccess",
-                "dotnotation"
+                "array",
+                "dot-notation",
+                "object",
+                "php",
+                "php8"
             ],
             "support": {
-                "issues": "https://github.com/adbario/php-dot-notation/issues",
-                "source": "https://github.com/adbario/php-dot-notation/tree/3.3.0"
+                "issues": "https://github.com/web-fu/php-dot-notation/issues",
+                "source": "https://github.com/web-fu/php-dot-notation/tree/main"
             },
-            "time": "2023-02-24T20:27:50+00:00"
+            "time": "2023-04-07T14:25:09+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
